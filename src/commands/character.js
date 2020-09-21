@@ -16,15 +16,9 @@ module.exports.run = async (client, message, args) => {
 		return;
 	};
 
-	const variables = {
-		page: 1,
-		perPage: 1,
-		search: search
-	};
-
 	const query = `
-		query ($search: String) { 
-            Character(search: $search) {
+		query { 
+            Character(search: "${search}") {
                 siteUrl
                 description
                 favourites
@@ -54,7 +48,7 @@ module.exports.run = async (client, message, args) => {
 			}
 		`
 
-	const mediaInfo = await client.utilities.fetch(search, variables, query);
+	const mediaInfo = await client.utilities.fetch(query, {page: 1, perPage: 1});
 
 	if (!mediaInfo.data.Character) {
 		const m = await message.channel.send(`Character \`${search}\` not found.`)
