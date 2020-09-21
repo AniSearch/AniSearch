@@ -8,10 +8,10 @@ module.exports.run = async (client, message) => {
 		.setThumbnail(client.user.defaultAvatarURl)
 		.addFields({
 			name: 'Commands',
-			value: '`!info`: various information on the bot\n`!ping:`view the bot\'s ping\n`!anime`: search an anime\n'
+			value: '`!info`: various information on the bot\n`!ping:`view the bot\'s ping\n`!anime`: search an anime\n`!character`: search a character'
 		}, {
 			name: 'Stats:',
-			value: `\`Servers\`: ${client.guilds.cache.size}\n\`Users\`: ${client.users.cache.size}`,
+			value: `\`Servers\`: ${client.guilds.cache.size}\n\`Users\`: ${client.users.cache.size}\n\`Uptime\`: ${require('./anime.js').seconds(client.uptime / 1000)}`,
 			inline: true
 		}, {
 			name: 'GitHub:',

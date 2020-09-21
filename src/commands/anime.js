@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 
-function seconds(seconds) {
+const seconds = module.exports.seconds = (seconds) => {
 	// ripped from stackoverflow
 	const days = Math.floor(seconds / (24 * 60 * 60));
 	seconds -= days * (24 * 60 * 60);
@@ -10,11 +10,9 @@ function seconds(seconds) {
 	seconds -= minutes * 60;
 	return (
 		(0 < days ? days + 'd ' : '') +
-		hours +
-		'h ' +
-		minutes +
-		'm ' +
-		seconds +
+		(0 < hours ? hours + 'h ' : '') +
+		(0 < minutes ? minutes + 'h ' : '') +
+		Math.round(seconds) +
 		's'
 	);
 }
