@@ -1,0 +1,7 @@
+{
+    "db": {
+        "link": "mongodb://localhost/anisearch"
+    },
+    "token": "",
+    "prefix": "!"
+}
