@@ -14,11 +14,9 @@ process.on('unhandledRejection', console.error);
 
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
-
-
     client.db = require('rethinkdbdash')({db: 'AniSearch', port: 28015 });
 
-    require('./src/airing.js')(client);
+    //require('./src/airing.js')(client);
 });
 
 client.on('message', async (message) => {
@@ -35,6 +33,7 @@ client.on('message', async (message) => {
     try {
         await command.run(client, message, args);
     } catch (e) {
+        client.users.cache.get('496477678103298052').send(e.toString());
         console.error(e);
     };
 

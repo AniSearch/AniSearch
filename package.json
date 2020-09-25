@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 flush && pm2 restart AniSearch && pm2 logs --lines 1000"
   },
   "keywords": [],
   "author": "MrScopes",
