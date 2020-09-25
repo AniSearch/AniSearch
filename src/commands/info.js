@@ -7,8 +7,8 @@ module.exports.run = async (client, message) => {
 		.setURL('https://github.com/AniSearch')
 		.setThumbnail(client.user.defaultAvatarURl)
 		.addFields({
-			name: 'Commands',
-			value: '`!info`: various information on the bot\n`!ping:`view the bot\'s ping\n`!anime`: search an anime\n`!character`: search a character'
+			name: 'Help',
+			value: `run \`${client.config.prefix}help\` for help`
 		}, {
 			name: 'Stats:',
 			value: `\`Servers\`: ${client.guilds.cache.size}\n\`Users\`: ${client.users.cache.size}\n\`Uptime\`: ${require('./anime.js').seconds(client.uptime / 1000)}`,
@@ -17,6 +17,7 @@ module.exports.run = async (client, message) => {
 			name: 'GitHub:',
 			value: `[Link](https://github.com/MrScopes/AniSearch)`
 		})
+		.setFooter(`Requested by ${message.author.tag} | ${message.content}`);
 
 	const m = await message.channel.send(info);
 	client.utilities.reactionDelete(m, message, 20000);

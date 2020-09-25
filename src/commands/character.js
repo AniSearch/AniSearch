@@ -90,6 +90,7 @@ module.exports.run = async (client, message, args) => {
 			value: `\`${media.favourites}\``,
 			inline: true
 		})
+		.setFooter(`Requested by ${message.author.tag} | ${message.content}`);
 
 	if (embed.length <= 1500) {
 		const m = await message.channel.send(embed);
