@@ -3,9 +3,7 @@ Unofficial Discord bot made around the [AniList](https://anilist.co/) api.\
 created by MrScopes#5548\
 \
 **Setup**\
-Pull the Code\
-Rename `src/config.json.example` to `src/config.json`\
-Edit the Config\
+the only requirement (other than node and basics obviously) is rethinkdb\
 \
 **Config**\
 The config can be found [here](/src/config.json.example)\
