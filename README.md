@@ -1,6 +1,7 @@
 **AniSearch**\
-Unofficial Discord bot made around the [AniList](https://anilist.co/) api.\
-created by MrScopes#5548\
+Discord bot made around the [AniList](https://anilist.co/) api.\
+The bot also utilizes the [Kitsu Api](https://kitsu.io/) and the [Unofficial MAL Api](https://jikan.moe/) for linking\
+created by MrScopes#5548 on Sep 7th 2020\
 \
 **Setup**\
 the only requirement (other than node and basics obviously) is rethinkdb\
