@@ -6,7 +6,7 @@ module.exports.cleanHtml = (text) => {
 		.replace(/\/b>/g, '')
 		.replace(/<br>/g, '')
 		.replace(/<i>/g, '')
-		.replace(/\/n/g, '');
+		.replace(/\/<i>/g, '')
 };
 
 module.exports.reactionDelete = async (botMessage, playerMessage, timeout) => {

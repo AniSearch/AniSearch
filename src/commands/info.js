@@ -11,7 +11,7 @@ module.exports.run = async (client, message) => {
 			value: `run \`${client.config.prefix}help\` for help`
 		}, {
 			name: 'Stats:',
-			value: `\`Servers\`: ${client.guilds.cache.size}\n\`Users\`: ${client.users.cache.size}\n\`Uptime\`: ${require('./anime.js').seconds(client.uptime / 1000)}`,
+			value: `\`Servers\`: ${client.guilds.cache.size}\n\`Users\`: ${client.users.cache.size}\n\`Uptime\`: ${client.utilities.seconds(client.uptime / 1000)}`,
 			inline: true
 		}, {
 			name: 'GitHub:',

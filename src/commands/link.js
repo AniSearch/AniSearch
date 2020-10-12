@@ -1,81 +1,56 @@
 const Discord = require('discord.js');
+const fetch = require('node-fetch');
 
 module.exports.run = async (client, message, args) => {
-    if (message.deletable) message.delete({ timeout: 5000 });
 
-    if (!args[0]) { 
-		const m = await message.channel.send('`!link <AniList | MAL | Kitsu> <code> <username/id>`\nThe bot will DM your PERMANENT code, you will need to update your ABOUT ME on the respective site.\nGet your code by dming the bot "!code".');
+	if (!args[1]) { 
+		const m = await message.channel.send('`!link <AniList | MAL | Kitsu> <username/id>`');
 		if (m.deletable) m.delete({ timeout: 10000 });
 		return;
-    };
-    
-    const platform = args[0].toLowerCase();
+	};
+	
+	const platform = args[0].toLowerCase();
 
-    if (platform !== 'anilist' && platform  !== 'mal' && platform  !== 'ketsu') {
-		const m = await message.channel.send('Invalid Platform. Try `AniList`, `MAL`, or `Ketsu`.');
+	if (platform !== 'anilist' && platform  !== 'mal' && platform  !== 'kitsu') {
+		const m = await message.channel.send('Invalid Platform. Try `AniList`, `MAL`, or `Kitsu`.');
 		if (m.deletable) m.delete({ timeout: 10000 });
 		return;
-    };
+	};
 
-    const code = await client.db.table('users').get(message.author.id).getField('code');
+	const id = args[1];
 
-    const newCode = requrie('random-key-generator')(16);
+	if (platform === 'anilist') {
+		const query = `
+			query {
+				User(search: "${id}") {
+					name
+				}
+			}
+			`
 
-    if (await client.db.table('users').get(message.author.id).getField(platform))
-    if (!code) {
+		const json = await client.utilities.fetch(query, { page: 1, perPage: 1 });
 
-        try { await client.db.table('users').get(message.author.id).update({ code: newCode }).run();
-        } catch(e) { await client.db.table('users').insert({ id: message.author.id, code: newCode }).run() };
- 
-        try { message.author.send(`Your code is \`${newCode}\`. Make sure to update it on \`${platform}\`. You can see and change this code at any time here with \`${client.config.prefix}code\`.`);
-        } catch(e) { message.reply(`I couldn't dm you your code. Please enable dms then try again.`) };
+		if (json.errors) return message.channel.send('Error: ' + json.errors[0].message);
 
-    } else {
-        if (message.channel.type !== 'dm') return message.channel.send('For security, you must input your code via dm\'s.');
+	} else if (platform === 'mal') {
+		const url = `https://api.jikan.moe/v3/user/${id}`;
+		const req = await fetch(url);
+		const json = await req.json();
 
-        if (!args[2]) return message.channel.send('');
+		if (json.error) return message.channel.send('Error: ' + json.error);
 
-        const attemptedCode = args[1];
-        if (code !== attemptedCode) return message.channel.send('Wrong code.');
+	} else if (platform === 'kitsu') {
+		const url = `https://kitsu.io/api/edge/users/${id}`;
+		const req = await fetch(url);
+		const json = await req.json();
 
-        const id = args[2];
+		if (json.errors) return message.channel.send('Error: ' + json.errors[0].title + ' , Make sure you\'re using your id, not username.');
 
-        if (platform === 'anilist') {
-            const query = `
-            query {
-                Page(page: 1, perPage: 1) {
-                users(name: "${id}") {
-                    name
-                    id
-                    about
-                    siteUrl
-                }
-                }
-            }
-            `
-            const json = await client.utilities.fetch(query, { page: 1, perPage: 1 });
-            if (!json.data.Page.users[0].about.contains(code)) return message.channel.send('The ABOUT ME was missing your code.');
+	};
 
-        } else if (platform === 'mal') {
-            const url = `https://api.jikan.moe/v3/user/${id}`;
-            const req = await fetch(url, options);
-            const json = await req.json();
+	const obj = { [platform] : id };
 
-            if (!json.about.contains(code)) return message.channel.send('The ABOUT ME was missing your code.');
-
-        } else if (platform === 'ketsu') {
-            const url = `https://kitsu.io/api/edge/users/${id}`;
-            const req = await fetch(url, options);
-            const json = await req.json();
-
-            if (!json.data.attributes.about.contains(code)) return message.channel.send('The ABOUT ME was missing your code.');
-
-        };
-
-    };
-
-    try { await client.db.table('users').get(message.author.id).update({ platform: id }).run();
-    } catch(e) {  await client.db.table('users').insert({ id: message.author.id, platform: id }).run() };
-
+	await client.db.table('users').get(message.author.id).update(obj);
+	message.channel.send(`Linked \`${platform} : ${id}\` to \`${message.author.tag}\`.`);
 
 };
