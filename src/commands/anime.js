@@ -93,7 +93,8 @@ module.exports.run = async (client, message, args) => {
 		.setAuthor(`${media.title.english ? media.title.english : media.title.romaji} (${media.meanScore ? media.meanScore : media.averageScore}%)`, 'https://anilist.co/img/icons/android-chrome-512x512.png', media.siteUrl)
 		.setDescription(`\`\`\`${description}\`\`\``)
 		.setImage(media.bannerImage)
-		.setFooter(`Requested by ${message.author.tag} | ${message.content}`);
+        .setFooter(`${message.content} | Requested by ${message.author.tag}`)
+        .setTimestamp();
 
 		const genres = media.genres.map(genre => genre).join(', ')
 		embed.addFields({ name: 'Genres', value: genres ? genres : 'No Genres', inline: false })
@@ -104,7 +105,6 @@ module.exports.run = async (client, message, args) => {
 		if (!short) {
 			const studios = media.studios.nodes.map(studio => studio.name).join(', ');
 			embed.addFields({ name: 'Studios', value: studios ? studios : 'No Studios', inline: false })
-
 		};
 
 		if (media.nextAiringEpisode) { episodes =  `${media.nextAiringEpisode.episode - 1}/${media.episodes ? media.episodes : '?'} (${media.duration}m)\nAiring in: ${client.utilities.seconds(media.nextAiringEpisode.timeUntilAiring)}` }

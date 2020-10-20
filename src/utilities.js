@@ -3,10 +3,10 @@ const fetch = require('node-fetch');
 module.exports.cleanHtml = (text) => {
 	return text
 		.replace(/<b>/g, '')
-		.replace(/\/b>/g, '')
+		.replace(/<\/b>/g, '')
 		.replace(/<br>/g, '')
 		.replace(/<i>/g, '')
-		.replace(/\/<i>/g, '')
+		.replace(/<\/i>/g, '')
 };
 
 module.exports.reactionDelete = async (botMessage, playerMessage, timeout) => {
@@ -120,4 +120,8 @@ module.exports.resolveMember = async (client, message, args) => {
 
 		return false;
 	} catch (e) { return false };
+};
+
+module.exports.getPrefix = async (client, guild) => {
+
 };

@@ -19,6 +19,7 @@ module.exports.run = async (client, message, args) => {
 
         client.commands.set(command.name, commandObject);
 
+        delete require.cache[require.resolve('./../utilities.js')];
         client.utilities = require('./../utilities.js');
     } catch (error) {
         console.error(error);

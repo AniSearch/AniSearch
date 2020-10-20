@@ -2,8 +2,9 @@ const Discord = require('discord.js');
 
 module.exports.aliases = ['mal', 'anilist', 'kitsu'];
 module.exports.run = async (client, message, args) => {
-    if (message.deletable) message.delete({ timeout: 5000 });
 
+    if (message.deletable) message.delete({ timeout: 5000 });
+    
     if (!args[0]) return message.channel.send(`\`!profile <user>\``);
     const user = await client.utilities.resolveMember(client, message, args);
 

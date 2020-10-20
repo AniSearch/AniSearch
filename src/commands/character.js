@@ -2,20 +2,20 @@ const Discord = require('discord.js');
 
 module.exports.aliases = ['c'];
 module.exports.run = async (client, message, args) => {
+	if (message.deletable) message.delete({ timeout: 5000 });
 
-	if (message.deletable) message.delete({
-		timeout: 5000
-	});
-
-	const search = args.join(' ');
-	if (!search) {
-		const m = await message.channel.send(`Correct Usage: \`${client.config.prefix}character <name>\`.`)
-		if (m.deletable) m.delete({
-			timeout: 10000
-		});
+	if (!args[0]) {
+		const m = await message.channel.send(`Correct Usage: \`${client.config.prefix}character <name>\`.`);
+		if (m.deletable) m.delete({ timeout: 10000 });
 		return;
 	};
 
+	if (args[0].toLowerCase() === '-short') {
+		short = true;
+		args.shift();
+	} else { short = false };
+
+	const search = args.join(' ');
 	const query = `
 		query { 
             Character(search: "${search}") {
@@ -51,7 +51,7 @@ module.exports.run = async (client, message, args) => {
 	const mediaInfo = await client.utilities.fetch(query, {page: 1, perPage: 1});
 
 	if (!mediaInfo.data.Character) {
-		const m = await message.channel.send(`Character \`${search}\` not found.`)
+		const m = await message.channel.send(`Character \`${search}\` not found.`);
 		if (m.deletable) m.delete({
 			timeout: 10000
 		});
@@ -62,13 +62,15 @@ module.exports.run = async (client, message, args) => {
 
 	let description = media.description;
 	if (description.length >= 750) {
-		description = description.substring(1, 750);
+		description = description.substring(0, 750);
 		description = [description];
 		description.push('(description too long)')
 		description = description.join(' ');
 	};
 
-	description = description.replace(/~!/g, '||').replace(/!~/g, '||');
+	if (short) description = `${description.slice(0, 350)} (Shortened Description)`;
+
+	description = description.replace(/~!/g, '|| ').replace(/!~/g, '|| ');
 
 	let allMedia = [];
 	for (i = 0; i < 5; i++) {
@@ -90,7 +92,8 @@ module.exports.run = async (client, message, args) => {
 			value: `\`${media.favourites}\``,
 			inline: true
 		})
-		.setFooter(`Requested by ${message.author.tag} | ${message.content}`);
+        .setFooter(`${message.content} | Requested by ${message.author.tag}`)
+        .setTimestamp();
 
 	if (embed.length <= 1500) {
 		const m = await message.channel.send(embed);

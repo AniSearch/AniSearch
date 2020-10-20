@@ -2,7 +2,9 @@ const Discord = require('discord.js');
 const fetch = require('node-fetch');
 
 module.exports.run = async (client, message, args) => {
-
+	
+	if (message.deletable) message.delete({ timeout: 5000 });
+	
 	if (!args[1]) { 
 		const m = await message.channel.send('`!link <AniList | MAL | Kitsu> <username/id>`');
 		if (m.deletable) m.delete({ timeout: 10000 });
