@@ -1,6 +1,5 @@
 **AniSearch**\
 Discord bot made around the [AniList](https://anilist.co/) api.\
-The bot also utilizes the [Kitsu Api](https://kitsu.io/) and the [Unofficial MAL Api](https://jikan.moe/) for linking\
 created by MrScopes#5548 on Sep 7th 2020
 
 **Features**\
