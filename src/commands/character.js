@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 
 module.exports.aliases = ['c'];
+module.exports.description = 'Searches for a specific character.';
+module.exports.usage = '!character naruto/n!character -long deku';
 module.exports.run = async (client, message, args) => {
 	if (message.deletable) message.delete({ timeout: 5000 });
 
@@ -10,10 +12,10 @@ module.exports.run = async (client, message, args) => {
 		return;
 	};
 
-	if (args[0].toLowerCase() === '-short') {
-		short = true;
+	if (args[0].toLowerCase() === '-long') {
+		long = true;
 		args.shift();
-	} else { short = false };
+	} else { long = false };
 
 	const search = args.join(' ');
 	const query = `
@@ -68,9 +70,7 @@ module.exports.run = async (client, message, args) => {
 		description = description.join(' ');
 	};
 
-	if (short) description = `${description.slice(0, 350)} (Shortened Description)`;
-
-	description = description.replace(/~!/g, '|| ').replace(/!~/g, '|| ');
+	description = description.replace(/~!/g, '||').replace(/!~/g, '||');
 
 	let allMedia = [];
 	for (i = 0; i < 5; i++) {
@@ -81,8 +81,7 @@ module.exports.run = async (client, message, args) => {
 	const embed = new Discord.MessageEmbed()
 		.setAuthor(media.name.full, media.image.large, media.siteUrl)
 		.setColor(media.media.nodes[0].coverImage.color)
-		.setDescription(description)
-		.setImage(media.image.large)
+		.setDescription(`${long ? description : `${description.slice(0, 350)} (Shortened Description)`}`)
 		.addFields({
 			name: 'Media',
 			value: allMedia,
@@ -92,12 +91,12 @@ module.exports.run = async (client, message, args) => {
 			value: `\`${media.favourites}\``,
 			inline: true
 		})
-        .setFooter(`${message.content} | Requested by ${message.author.tag}`)
+        .setFooter(`${message.author.tag} | ${message.content}`, message.author.avatarURL())
         .setTimestamp();
 
 	if (embed.length <= 1500) {
 		const m = await message.channel.send(embed);
-		client.utilities.reactionDelete(m, message, 20000);
+		client.utilities.reactionDelete(m, message);
 	} else {
 		const m = await message.channel.send('The response is too long... I\'ll dm it to you.');
 		try {

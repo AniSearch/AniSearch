@@ -1,5 +1,7 @@
 const { inspect } = require('util');
 
+module.exports.description = 'Evaluates code. (developer only)';
+module.exports.usage = '!eval message.channel.send(`${client.ws.ping}`);';
 module.exports.run = async (client, message, args) => {
     if (message.author.id !== '496477678103298052') return;
     const input = args.join(' ');

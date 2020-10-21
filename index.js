@@ -47,6 +47,8 @@ const handle = async () => {
             const lCommand = c.toLowerCase();
             let {
                 aliases,
+                description,
+                usage,
                 run
             } = require(`./src/commands/${c}`);
 
@@ -56,6 +58,8 @@ const handle = async () => {
             const commandObject = {
                 name: c,
                 aliases,
+                description,
+                usage,
                 run
             };
 

@@ -1,5 +1,7 @@
 const Discord = require('discord.js');
 
+module.exports.description = 'Bot info.';
+module.exports.usage = '!info';
 module.exports.run = async (client, message) => {
 
 	const info = new Discord.MessageEmbed()
@@ -17,7 +19,7 @@ module.exports.run = async (client, message) => {
 			name: 'GitHub:',
 			value: `[Link](https://github.com/MrScopes/AniSearch)`
 		})
-		.setFooter(`Requested by ${message.author.tag} | ${message.content}`);
+		.setFooter(`${message.author.tag} | ${message.content}`, message.author.avatarURL())
 
 	const m = await message.channel.send(info);
 	client.utilities.reactionDelete(m, message, 20000);

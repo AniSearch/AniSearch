@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const fetch = require('node-fetch');
 
+module.exports.description = 'Link your mal, anilist, or kitsu profile.';
+module.exports.usage = '!link MAL MrScopes\n!link AniList MrScopes\n!link Kitsu 861207';
 module.exports.run = async (client, message, args) => {
 	
 	if (message.deletable) message.delete({ timeout: 5000 });

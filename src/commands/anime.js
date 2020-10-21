@@ -1,19 +1,21 @@
 const Discord = require('discord.js');
 
 module.exports.aliases = ['a'];
+module.exports.description = 'Searches for a specific anime.';
+module.exports.usage = '!anime naruto\n!anime -long my hero academia\n!anime -adult kanojo x kanojo';
 module.exports.run = async (client, message, args) => {
 	if (message.deletable) message.delete({ timeout: 5000 });
 
 	if (!args[0]) { 
-		const m = await message.channel.send('Command Usage:\n`!anime my hero academia`: information on my hero academia\n`!anime -short my hero academia`: description, genre, and watch links\n`!anime -adult itadaki`: adult anime, only works in nsfw channels or servers without scanning\n');
+		const m = await message.channel.send(`\`${prefix}anime [-long, -adult] <name>\``);
 		if (m.deletable) m.delete({ timeout: 10000 });
 		return;
 	};
 
-	if (args[0].toLowerCase() === '-short') {
-		short = true;
+	if (args[0].toLowerCase() === '-long') {
+		long = true;
 		args.shift();
-	} else { short = false };
+	} else { long = false };
 
 	if (args[0].toLowerCase() === '-adult') {
 		adult = true;
@@ -86,14 +88,12 @@ module.exports.run = async (client, message, args) => {
 		const media = mediaInfo.data.Page.media[0];
 		description = client.utilities.cleanHtml(media.description);
 
-		if (short) description = `${description.slice(0, 350)} (Shortened Description)`;
-
 		const embed = new Discord.MessageEmbed()
 		.setColor(media.coverImage.color)
-		.setAuthor(`${media.title.english ? media.title.english : media.title.romaji} (${media.meanScore ? media.meanScore : media.averageScore}%)`, 'https://anilist.co/img/icons/android-chrome-512x512.png', media.siteUrl)
-		.setDescription(`\`\`\`${description}\`\`\``)
+		.setAuthor(`${media.title.english || media.title.romaji} (${media.meanScore || media.averageScore}%)`, 'https://anilist.co/img/icons/android-chrome-512x512.png', media.siteUrl)
+		.setDescription(`\`\`\`${long ? description : `${description.slice(0, 350)} (Shortened Description)`}\`\`\``)
 		.setImage(media.bannerImage)
-        .setFooter(`${message.content} | Requested by ${message.author.tag}`)
+        .setFooter(`${message.author.tag} | ${message.content}`, message.author.avatarURL())
         .setTimestamp();
 
 		const genres = media.genres.map(genre => genre).join(', ')
@@ -102,18 +102,18 @@ module.exports.run = async (client, message, args) => {
 		const tags = media.tags.map(tag => tag.isMediaSpoiler ? `||${tag.name}||` : tag.name).join(', ')
 		embed.addFields({ name: 'Tags', value: tags ? tags : 'No Tags', inline: false })
 
-		if (!short) {
-			const studios = media.studios.nodes.map(studio => studio.name).join(', ');
-			embed.addFields({ name: 'Studios', value: studios ? studios : 'No Studios', inline: false })
-		};
-
 		if (media.nextAiringEpisode) { episodes =  `${media.nextAiringEpisode.episode - 1}/${media.episodes ? media.episodes : '?'} (${media.duration}m)\nAiring in: ${client.utilities.seconds(media.nextAiringEpisode.timeUntilAiring)}` }
 		else { episodes = `${media.episodes ? media.episodes : media.episodes} (${media.duration}m)` };
 		embed.addFields({ name: 'Episodes', value: `${episodes ? episodes : media.episodes}`, inline: true })
+
+		if (long) {
+			const studios = media.studios.nodes.map(studio => studio.name).join(', ');
+			embed.addFields({ name: 'Studios', value: studios ? studios : 'No Studios', inline: false })
+		};
 	
 		if (media.streamingEpisodes[0]) embed.addFields({ name: 'Watch', value: `[${media.streamingEpisodes[0].site}](${media.streamingEpisodes[0].url})`, inline: true, });
 
 		const m = await message.channel.send(embed);
-		client.utilities.reactionDelete(m, message, 20000);
+		client.utilities.reactionDelete(m, message);
 
 };

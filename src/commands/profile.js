@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 
 module.exports.aliases = ['mal', 'anilist', 'kitsu'];
+module.exports.description = 'View the mal, anilist, and kitsu profile of a user.';
+module.exports.usage = '!profile MrScopes\n!profile MrScopes#5548\n!profile 496477678103298052\n!profile @MrScopes';
 module.exports.run = async (client, message, args) => {
 
     if (message.deletable) message.delete({ timeout: 5000 });
@@ -16,8 +18,8 @@ module.exports.run = async (client, message, args) => {
 
     const embed = new Discord.MessageEmbed()
     .setColor('red')
-    .setAuthor(`${user.tag}`, user.avatarURL())
-    .setFooter(`Requested by ${message.author.tag} | ${message.content}`)
+    .setAuthor(`${user.user.tag}`, user.user.avatarURL())
+    .setFooter(`${message.author.tag} | ${message.content}`, message.author.avatarURL())
 
     if (platforms.anilist) embed.addFields({ name: 'AniList', value: `[${platforms.anilist}](https://anilist.co/user/${platforms.anilist}/)`, inline: true });
     if (platforms.mal) embed.addFields({ name: 'MAL', value: `[${platforms.mal}](https://myanimelist.net/profile/${platforms.mal}/)`, inline: true });

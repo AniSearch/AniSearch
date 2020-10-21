@@ -9,65 +9,18 @@ module.exports.cleanHtml = (text) => {
 		.replace(/<\/i>/g, '')
 };
 
-module.exports.reactionDelete = async (botMessage, playerMessage, timeout) => {
-	const filter = (reaction, user) => {
-		return (
-			['🗑️'].includes(reaction.emoji.name) &&
-			user.id === playerMessage.author.id
-		);
-	};
+module.exports.reactionDelete = async (botMessage, playerMessage) => {
 
-	if (botMessage.deletable) botMessage.react('🗑️');
+	const filter = (reaction, user) => { return (['🗑️'].includes(reaction.emoji.name) && user.id === playerMessage.author.id )};
+	
+	if (botMessage.deletable) await botMessage.react('🗑️');
 
-	botMessage
-		.awaitReactions(filter, {
-			max: 1,
-			time: timeout,
-		})
-		.then((collected) => {
-			if (collected.first().emoji.name === '🗑️') {
-				if (botMessage.deletable) botMessage.delete();
-			}
-		})
-		.catch((collected) => {
-			if (botMessage.deletable)
-				botMessage.reactions.cache.get('🗑️').remove();
-		});
-};
+	const reactions = await botMessage.awaitReactions(filter, { max: 1, time: 1000000000 });
+	
+	if (reactions.first().emoji.name === '🗑️') 
+	if (botMessage.deletable) 
+	botMessage.delete();
 
-module.exports.reactionNotify = async () => {
-/*
-	client,
-	botMessage,
-	playerMessage,
-	timeout,
-	media
-) => {
-	const filter = (reaction, user) => {
-		return ['❗'].includes(reaction.emoji.name) && !user.bot;
-	};
-
-	if (botMessage.deletable) botMessage.react('❗');
-
-	botMessage
-		.awaitReactions(filter, {
-			max: 1,
-			time: timeout,
-		})
-		.then((collected) => {
-			if (collected.first().emoji.name === '❗') {
-				if (false) {
-					playerMessage.author.send(
-						`I'll start notifying you when ${media.title.romaji} episodes air.`
-					);
-				} else {
-					playerMessage.author.send(
-						`I'll no longer notify you when ${media.title.romaji} episodes air.`
-					);
-				}
-			}
-		});
-*/
 };
 
 module.exports.fetch = async (query, variables) => {
@@ -106,22 +59,12 @@ module.exports.seconds = (seconds) => {
 }
 
 module.exports.resolveMember = async (client, message, args) => {
-	try {
-		const mention = message.mentions.users.first();
-		if (mention) return mention;
+	const member = 
+	message.mentions.members.first() || 
+	message.guild.members.cache.get(args[0]) || 
+	message.guild.members.cache.find(m => m.user.tag === args[0]);
+	message.guild.members.cache.find(m => m.user.username === args[0]);
+	message.guild.members.cache.find(m => m.nickname === args[0]);
 
-		if (client.users.cache.get(args[0])) return client.users.cache.get(args[0]);
-
-		const userTag = client.users.cache.find(u => u.tag === args[0]);
-		if (userTag) return userTag;
-
-		const userName = client.users.cache.find(u => u.username === args[0]);
-		if (userName) return userName;
-
-		return false;
-	} catch (e) { return false };
-};
-
-module.exports.getPrefix = async (client, guild) => {
-
+	return member;
 };
