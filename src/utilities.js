@@ -17,9 +17,11 @@ module.exports.reactionDelete = async (botMessage, playerMessage) => {
 
 	const reactions = await botMessage.awaitReactions(filter, { max: 1, time: 10000 });
 	
-	if (reactions.first().emoji.name === '🗑️') 
+	if (reactions.get('🗑️')) 
 	if (botMessage.deletable) 
 	botMessage.delete();
+
+	setTimeout( () => { try { botMessage.reactions.cache.get('🗑️').remove() } catch (e) { }}, 10000);
 
 };
 
@@ -53,18 +55,17 @@ module.exports.seconds = (seconds) => {
 	seconds -= hours * (60 * 60);
 	const minutes = Math.floor(seconds / 60);
 	seconds -= minutes * 60;
-	return (
-		(0 < days ? days + 'd ' : '') + (0 < hours ? hours + 'h ' : '') + (0 < minutes ? minutes + 'h ' : '') + Math.round(seconds) + 's');
+	return ((0 < days ? days + 'd ' : '') + (0 < hours ? hours + 'h ' : '') + (0 < minutes ? minutes + 'h ' : '') + Math.round(seconds) + 's');
 
 }
 
-module.exports.resolveMember = async (client, message, args) => {
+module.exports.resolveMember = async (message, input) => {
 	const member = 
 	message.mentions.members.first() || 
-	message.guild.members.cache.get(args[0]) || 
-	message.guild.members.cache.find(m => m.user.tag === args[0]);
-	message.guild.members.cache.find(m => m.user.username === args[0]);
-	message.guild.members.cache.find(m => m.nickname === args[0]);
+	message.guild.members.cache.get(input) || 
+	message.guild.members.cache.find(m => m.user.tag === input);
+	message.guild.members.cache.find(m => m.user.username === input);
+	message.guild.members.cache.find(m => m.nickname === input);
 
 	return member;
 };

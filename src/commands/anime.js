@@ -4,7 +4,6 @@ module.exports.aliases = ['a'];
 module.exports.description = 'Searches for a specific anime.';
 module.exports.usage = '!anime naruto\n!anime -long my hero academia\n!anime -adult kanojo x kanojo';
 module.exports.run = async (client, message, args) => {
-	if (message.deletable) message.delete({ timeout: 5000 });
 
 	if (!args[0]) { 
 		const m = await message.channel.send(`\`${prefix}anime [-long, -adult] <name>\``);
@@ -90,9 +89,10 @@ module.exports.run = async (client, message, args) => {
 
 		const embed = new Discord.MessageEmbed()
 		.setColor(media.coverImage.color)
-		.setAuthor(`${media.title.english || media.title.romaji} (${media.meanScore || media.averageScore}%)`, 'https://anilist.co/img/icons/android-chrome-512x512.png', media.siteUrl)
-		.setDescription(`\`\`\`${long ? description : `${description.slice(0, 350)} (Shortened Description)`}\`\`\``)
+		.setAuthor(media.title.english || media.title.romaji, 'https://anilist.co/img/icons/android-chrome-512x512.png', media.siteUrl)
+		.setDescription(`\`\`\`${long ? description.trim() : `${description.trim().slice(0, 350)} (Shortened Description)`}\`\`\``)
 		.setImage(media.bannerImage)
+		.setThumbnail(media.coverImage.extraLarge)
         .setFooter(`${message.author.tag} | ${message.content}`, message.author.avatarURL())
         .setTimestamp();
 
@@ -102,9 +102,11 @@ module.exports.run = async (client, message, args) => {
 		const tags = media.tags.map(tag => tag.isMediaSpoiler ? `||${tag.name}||` : tag.name).join(', ')
 		embed.addFields({ name: 'Tags', value: tags ? tags : 'No Tags', inline: false })
 
-		if (media.nextAiringEpisode) { episodes =  `${media.nextAiringEpisode.episode - 1}/${media.episodes ? media.episodes : '?'} (${media.duration}m)\nAiring in: ${client.utilities.seconds(media.nextAiringEpisode.timeUntilAiring)}` }
+		embed.addFields({ name: 'Information', value: `Popularity: **${media.popularity}** - Favorites: **${media.favourites}**❤️\nScore: **${media.averageScore || media.meanScore}%**`, inline: false})
+
+		if (media.nextAiringEpisode) { episodes =  `${media.nextAiringEpisode.episode - 1}/${media.episodes ? media.episodes : '?'} (${media.duration}m)\nAiring in: **${client.utilities.seconds(media.nextAiringEpisode.timeUntilAiring)}**` }
 		else { episodes = `${media.episodes ? media.episodes : media.episodes} (${media.duration}m)` };
-		embed.addFields({ name: 'Episodes', value: `${episodes ? episodes : media.episodes}`, inline: true })
+		embed.addFields({ name: 'Episodes', value: `(**${media.format} ${media.seasonYear}**) ${episodes ? episodes : media.episodes}`, inline: true })
 
 		if (long) {
 			const studios = media.studios.nodes.map(studio => studio.name).join(', ');
@@ -115,5 +117,6 @@ module.exports.run = async (client, message, args) => {
 
 		const m = await message.channel.send(embed);
 		client.utilities.reactionDelete(m, message);
+		if (media.nextAiringEpisode) m.react('❗');
 
 };

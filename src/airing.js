@@ -45,4 +45,50 @@ module.exports = async (client) => {
     }
     */
 
+   const notify = async (message, user) => {
+    
+    if (!message.embeds) return;
+    const embed = message.embeds[0];
+
+    const anime = { name: embed.author.name, id: (embed.author.url).split('/')[4] };
+
+    const json = await client.db.table('anime').get(anime.id);
+
+    if (!json) {
+        await client.db.table('anime').insert({ id: anime.id, name: anime.name, users: [user.id] });
+        return message.channel.send(`${user}, I'll notify you when ${anime.name} airs.`);
+    }
+
+    if (json.users.includes(user.id)) {
+        let newArr = json.users;
+        newArr = newArr.filter(a => a !== user.id);
+
+        await client.db.table('anime').get(anime.id).update({ users: newArr });
+
+        message.channel.send(`${user}, I'll no longer notify you when ${anime.name} airs.`);
+    } else {
+
+        let newArr = json.users;
+        newArr.push(user.id);
+        await client.db.table('anime').get(anime.id).update({ users: newArr });
+
+        message.channel.send(`${user}, I'll notify you when ${anime.name} airs.`);
+    }
+
+}
+
+client.on('messageReactionAdd', async (reaction, user) => {
+    const message = reaction.message;
+    if (message.partial) return;
+    if (!message.embeds) return;
+    if (reaction.emoji.name === '❗' && message.author === client.user && user !== client.user) notify(message, user);
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+    const message = reaction.message;
+    if (message.partial) return;
+    if (!message.embeds) return;
+    if (reaction.emoji.name === '❗' && message.author === client.user && user !== client.user) notify(message, user);
+});
+
 };

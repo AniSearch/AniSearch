@@ -1,6 +1,6 @@
 const { Client } = require('discord.js');
 const { config } = require('process');
-const client = new Client({ disableEveryone: true });
+const client = new Client({ disableEveryone: true, partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const { readdir } = require('fs').promises;
 
 client.config = require('./src/config.json');
@@ -16,7 +16,8 @@ client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     client.db = require('rethinkdbdash')({db: 'AniSearch', port: 28015 });
 
-    //require('./src/airing.js')(client);
+    require('./src/airing.js')(client);
+    
 });
 
 client.on('message', async (message) => {
@@ -32,14 +33,12 @@ client.on('message', async (message) => {
 
     try {
         await command.run(client, message, args);
-    } catch (e) {
-        client.users.cache.get('496477678103298052').send(e.toString());
-        console.error(e);
-    };
+        message.delete({ timeout: 5000 });
+    } catch (e) { if (!e.includes('Unknown Message')) console.error(e) };
 
 });
 
-const handle = async () => {
+const handle = module.exports.handle = async () => {
     try {
 
         const commands = (await readdir('./src/commands/')).filter(e => e.endsWith('.js')).map(e => e.slice(0, -3));
