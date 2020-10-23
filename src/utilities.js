@@ -15,7 +15,7 @@ module.exports.reactionDelete = async (botMessage, playerMessage) => {
 	
 	if (botMessage.deletable) await botMessage.react('🗑️');
 
-	const reactions = await botMessage.awaitReactions(filter, { max: 1, time: 1000000000 });
+	const reactions = await botMessage.awaitReactions(filter, { max: 1, time: 10000 });
 	
 	if (reactions.first().emoji.name === '🗑️') 
 	if (botMessage.deletable) 

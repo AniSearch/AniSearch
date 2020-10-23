@@ -82,6 +82,7 @@ module.exports.run = async (client, message, args) => {
 		.setAuthor(media.name.full, media.image.large, media.siteUrl)
 		.setColor(media.media.nodes[0].coverImage.color)
 		.setDescription(`${long ? description : `${description.slice(0, 350)} (Shortened Description)`}`)
+		.setThumbnail(media.image.large)
 		.addFields({
 			name: 'Media',
 			value: allMedia,
