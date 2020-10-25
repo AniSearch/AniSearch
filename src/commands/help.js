@@ -8,8 +8,8 @@ module.exports.run = async (client, message, args) => {
         .setColor('#0099ff')
         .setAuthor(`${client.config.prefix}help`, 'https://anilist.co/img/icons/android-chrome-512x512.png', 'https://github.com/MrScopes/AniSearch')
 		.addFields({
-			name: '\\> Anime Commands (2)',
-			value: '`anime`, `character`'
+			name: '\\> Anime Commands (3)',
+			value: '`anime`, `character`, `airing`'
 		}, {
 			name: '\\> Profile (2)',
 			value: '`profile`, `link`'

@@ -23,9 +23,9 @@ module.exports.run = async (client, message, args) => {
 
 	const search = args.join(' ');
 	const query = `
-		query ($page: Int, $perPage: Int) { 
+		query ($search: String, $isAdult: Boolean, $page: Int, $perPage: Int) { 
 			Page(page: $page, perPage: $perPage) {
-				media(search: "${search}", type: ANIME, isAdult: ${adult}, sort: POPULARITY_DESC) {
+				media(search: $search, type: ANIME, isAdult: $isAdult, sort: POPULARITY_DESC) {
 					id
 					isAdult
 					status
@@ -76,7 +76,7 @@ module.exports.run = async (client, message, args) => {
 		}
 		`;
 
-		const mediaInfo = await client.utilities.fetch(query, { page: 1, perPage: 1 });
+		const mediaInfo = await client.utilities.fetch(query, { search, isAdult: adult, page: 1, perPage: 1 });
 	
 		if (!mediaInfo.data.Page.media[0]) {
 			const m = await message.channel.send(`Anime \`${search}\` not found.`);
@@ -92,7 +92,6 @@ module.exports.run = async (client, message, args) => {
 		.setAuthor(media.title.english || media.title.romaji, 'https://anilist.co/img/icons/android-chrome-512x512.png', media.siteUrl)
 		.setDescription(`\`\`\`${long ? description.trim() : `${description.trim().slice(0, 350)} (Shortened Description)`}\`\`\``)
 		.setImage(media.bannerImage)
-		.setThumbnail(media.coverImage.extraLarge)
         .setFooter(`${message.author.tag} | ${message.content}`, message.author.avatarURL())
         .setTimestamp();
 
@@ -102,10 +101,10 @@ module.exports.run = async (client, message, args) => {
 		const tags = media.tags.map(tag => tag.isMediaSpoiler ? `||${tag.name}||` : tag.name).join(', ')
 		embed.addFields({ name: 'Tags', value: tags ? tags : 'No Tags', inline: false })
 
-		embed.addFields({ name: 'Information', value: `Popularity: **${media.popularity}** - Favorites: **${media.favourites}**❤️\nScore: **${media.averageScore || media.meanScore}%**`, inline: false})
+		embed.addFields({ name: 'Information', value: `Popularity: **${media.popularity}** (**${media.favourites}**❤️)\nScore: **${media.averageScore || media.meanScore}%**`, inline: false})
 
 		if (media.nextAiringEpisode) { episodes =  `${media.nextAiringEpisode.episode - 1}/${media.episodes ? media.episodes : '?'} (${media.duration}m)\nAiring in: **${client.utilities.seconds(media.nextAiringEpisode.timeUntilAiring)}**` }
-		else { episodes = `${media.episodes ? media.episodes : media.episodes} (${media.duration}m)` };
+		else { episodes = `${media.episodes ? media.episodes : media.episodes} (**${media.duration}m**)` };
 		embed.addFields({ name: 'Episodes', value: `(**${media.format} ${media.seasonYear}**) ${episodes ? episodes : media.episodes}`, inline: true })
 
 		if (long) {

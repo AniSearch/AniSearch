@@ -34,7 +34,7 @@ client.on('message', async (message) => {
     try {
         await command.run(client, message, args);
         message.delete({ timeout: 5000 });
-    } catch (e) { if (!e.includes('Unknown Message')) console.error(e) };
+    } catch (e) { console.error(e) };
 
 });
 
@@ -71,6 +71,7 @@ const handle = module.exports.handle = async () => {
         console.error(e);
         process.exit();
 
+        
     }
 };
 

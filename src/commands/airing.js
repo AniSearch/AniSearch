@@ -8,7 +8,6 @@ module.exports.run = async (client, message, args) => {
     if (!user) return message.channel.send('User not found.');
 
     const json = await client.db.table('anime').filter(client.db.row('users'));
-    if (!json) message.channel.send(`${user.tag} has no notifications set up.`);
 
     let anime = json.filter(j => j.users.includes(user.id));
     anime = anime.map(a => `\n• ${a.name}`);
@@ -17,7 +16,7 @@ module.exports.run = async (client, message, args) => {
     .setAuthor(user.tag, user.avatarURL())
     .setDescription(`**Anime:**\n ${anime}`)
     .setThumbnail(user.avatarURL())
-    .setFooter(`${user.tag} | ${message.content}`, user.avatarURL())
+    .setFooter(`${message.author.tag} | ${message.content}`, message.author.avatarURL())
     .setTimestamp();
 
     const m = await message.channel.send(embed);

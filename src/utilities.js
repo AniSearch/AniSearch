@@ -35,9 +35,7 @@ module.exports.fetch = async (query, variables) => {
 			},
 			body: JSON.stringify({
 				query: query,
-				variables: {
-					variables,
-				},
+				variables
 			}),
 		};
 
