@@ -7,8 +7,8 @@ created by MrScopes#5548 on Sep 7th 2020
 ![](https://i.imgur.com/fqcWOHH.png)
 
 - Get notified when anime air (coming soon)
-![](https://i.imgur.com/ZcREVwj.png)
-![](https://i.imgur.com/nhOsRTo.png)
+![](https://i.imgur.com/ZcREVwj.png)\
+![](https://i.imgur.com/nhOsRTo.png)\
 
 - Find a member's AniList, Mal, or Kitsu Profile (!link)
 ![](https://i.imgur.com/LepSapd.png)
