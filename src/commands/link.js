@@ -5,21 +5,11 @@ module.exports.description = 'Link your mal, anilist, or kitsu profile.';
 module.exports.usage = '!link MAL MrScopes\n!link AniList MrScopes\n!link Kitsu 861207';
 module.exports.run = async (client, message, args) => {
 	
-	if (message.deletable) message.delete({ timeout: 5000 });
-	
-	if (!args[1]) { 
-		const m = await message.channel.send('`!link <AniList | MAL | Kitsu> <username/id>`');
-		if (m.deletable) m.delete({ timeout: 10000 });
-		return;
-	};
+	if (!args[1]) return message.channel.send('`!link <AniList | MAL | Kitsu> <username/id>`');
 	
 	const platform = args[0].toLowerCase();
 
-	if (platform !== 'anilist' && platform  !== 'mal' && platform  !== 'kitsu') {
-		const m = await message.channel.send('Invalid Platform. Try `AniList`, `MAL`, or `Kitsu`.');
-		if (m.deletable) m.delete({ timeout: 10000 });
-		return;
-	};
+	if (platform !== 'anilist' && platform  !== 'mal' && platform  !== 'kitsu') return message.channel.send('Invalid Platform. Try `AniList`, `MAL`, or `Kitsu`.');
 
 	const id = args[1];
 

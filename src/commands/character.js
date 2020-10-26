@@ -4,13 +4,8 @@ module.exports.aliases = ['c'];
 module.exports.description = 'Searches for a specific character.';
 module.exports.usage = '!character naruto/n!character -long deku';
 module.exports.run = async (client, message, args) => {
-	if (message.deletable) message.delete({ timeout: 5000 });
 
-	if (!args[0]) {
-		const m = await message.channel.send(`Correct Usage: \`${client.config.prefix}character <name>\`.`);
-		if (m.deletable) m.delete({ timeout: 10000 });
-		return;
-	};
+	if (!args[0]) return message.channel.send(`Correct Usage: \`${client.config.prefix}character <name>\`.`);
 
 	if (args[0].toLowerCase() === '-long') {
 		long = true;

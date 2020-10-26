@@ -43,7 +43,7 @@ module.exports = async (client) => {
 				const mediaInfo = await client.utilities.fetch(query, { id: parseInt(anime) });
 				const media = mediaInfo.data.Page.media[0];
 
-				setInterval(() => {
+				setTimeout(() => {
 					const embed = new Discord.MessageEmbed()
 						.setColor(media.coverImage.color)
 						.setAuthor(media.title.english || media.title.romaji, media.coverImage.extraLarge, media.siteUrl)
@@ -53,9 +53,10 @@ module.exports = async (client) => {
 						.setTimestamp();
 					try { const m = user.send(embed); m.react('❗')} catch (e) {};
 					notifyUsers();
-				}, media.nextAiringEpisode.timeUntilAiring * 1000);			
+				}, media.nextAiringEpisode.timeUntilAiring * 1000);
 			});
 		}
+		notifyUsers();
 	};
 
 	const notify = async (message, user) => {

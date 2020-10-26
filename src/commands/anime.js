@@ -5,11 +5,7 @@ module.exports.description = 'Searches for a specific anime.';
 module.exports.usage = '!anime naruto\n!anime -long my hero academia\n!anime -adult kanojo x kanojo';
 module.exports.run = async (client, message, args) => {
 
-	if (!args[0]) { 
-		const m = await message.channel.send(`\`${prefix}anime [-long, -adult] <name>\``);
-		if (m.deletable) m.delete({ timeout: 10000 });
-		return;
-	};
+	if (!args[0]) return message.channel.send(`\`${prefix}anime [-long, -adult] <name>\``);
 
 	if (args[0].toLowerCase() === '-long') {
 		long = true;
