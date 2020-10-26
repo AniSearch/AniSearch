@@ -1,5 +1,4 @@
 const { Client } = require('discord.js');
-const { config } = require('process');
 const client = new Client({ disableEveryone: true, partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 const { readdir } = require('fs').promises;
 
@@ -15,9 +14,7 @@ process.on('unhandledRejection', console.error);
 client.on('ready', async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     client.db = require('rethinkdbdash')({db: 'AniSearch', port: 28015 });
-
     require('./src/airing.js')(client);
-    
 });
 
 client.on('message', async (message) => {
@@ -37,9 +34,10 @@ client.on('message', async (message) => {
 
 });
 
-const handle = module.exports.handle = async () => {
+const handle = module.exports.handle = async (client) => {
     try {
 
+        require('./src/airing.js')(client);
         delete require.cache[require.resolve(`./src/utilities`)];
         client.utilities = require('./src/utilities');
         const commands = (await readdir('./src/commands/')).filter(e => e.endsWith('.js')).map(e => e.slice(0, -3));
@@ -73,7 +71,6 @@ const handle = module.exports.handle = async () => {
         console.error(e);
         process.exit();
 
-        
     }
 };
 
