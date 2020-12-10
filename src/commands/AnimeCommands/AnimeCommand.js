@@ -16,10 +16,12 @@ module.exports = class AnimeCommand extends Command {
 	}
 	
 	async exec(message, args) {
-        if (!args.anime) return message.channel.send('Correct Usage: `anime [options] <anime>`');
+        if (!args.anime) return message.channel.send('Correct Usage: `anime <anime>`');
         
         const search = await searchMedia({ search: args.anime, perPage: 10, sort: 'POPULARITY_DESC', type: 'ANIME' });
         if (!search[0]) return message.channel.send('Anime not found.');
+
+        if (!search[1]) return animeMessage(message, search[0].id);
 
         let results = [];
 
@@ -47,28 +49,32 @@ module.exports = class AnimeCommand extends Command {
             m.delete().catch(() => {});
             const id = search[number - 1].id;
             
-            const anime = await getMedia(id);
-            if (!anime) return message.channel.send('Anime not found.');
-		
-			message.channel.send(`<${anime.siteUrl}>`);
-            const embed = new MessageEmbed({
-                color: anime.coverImage.color,
-                author: { name: title(anime.title), icon_url: anime.coverImage.large, url: anime.siteUrl },
-                description: `\`\`\`${cleanHTML(anime.description.trim()).length > 350 ? cleanHTML(anime.description.trim().slice(0, 350)) + '...' : cleanHTML(anime.description.trim())}\`\`\``,
-                image: { url: anime.bannerImage },
-                footer: { text: `${message.author.tag} | ${message.content}`, icon_url: message.author.avatarURL()},
-                timestamp: new Date(),
-        
-                fields: [
-                    { name: 'Genres', value: anime.genres ? anime.genres.map(genre => genre).join(', ') : 'No Genres', inline: false },
-                    { name: 'Tags', value: anime.tags ? anime.tags.map(tag => tag.isMediaSpoiler ? `||${tag.name}||` : tag.name).join(', ') : 'No Tags', inline: false },
-                    { name: 'Information', value: `Aired (m/d/y): **${anime.startDate.month || '?'}/${anime.startDate.day || '?'}/${anime.startDate.year || '?'} - ${anime.endDate.month || '?'}/${anime.endDate.day || '?'}/${anime.endDate.year || '?'}**\nPopularity: **${anime.popularity || '?'}** (**${anime.favourites || '?'}**❤️)\nScore: **${(anime.averageScore || anime.meanScore) || '?'}%**\n\n**Episodes:** ${anime.nextAiringEpisode ? `${anime.nextAiringEpisode.episode - 1} (${humanize(anime.nextAiringEpisode.timeUntilAiring * 1000)})/` : ''}${anime.episodes || '?'} _(${anime.duration || '?'}m)_ ${(anime.streamingEpisodes).length > 0 ? `\n[Watch on ${anime.streamingEpisodes[0].site}](${anime.streamingEpisodes[0].url})` : ''}`, inline: false }
-                ]
-        
-            });
-        
-			const animeM = await message.channel.send(embed);
-			reactionDelete(animeM, message);
+            return animeMessage(message, id);
         };
     };
+}
+
+const animeMessage = async (message, id) => {
+    const anime = await getMedia(id);
+    if (!anime) return message.channel.send('Anime not found.');
+
+    message.channel.send(`<${anime.siteUrl}>`);
+    const embed = new MessageEmbed({
+        color: anime.coverImage.color,
+        author: { name: title(anime.title), icon_url: anime.coverImage.large, url: anime.siteUrl },
+        description: `\`\`\`${cleanHTML(anime.description.trim()).length > 350 ? cleanHTML(anime.description.trim().slice(0, 350)) + '...' : cleanHTML(anime.description.trim())}\`\`\``,
+        image: { url: anime.bannerImage },
+        footer: { text: `${message.author.tag} | ${message.content}`, icon_url: message.author.avatarURL()},
+        timestamp: new Date(),
+
+        fields: [
+            { name: 'Genres', value: anime.genres ? anime.genres.map(genre => genre).join(', ') : 'No Genres', inline: false },
+            { name: 'Tags', value: anime.tags ? anime.tags.map(tag => tag.isMediaSpoiler ? `||${tag.name}||` : tag.name).join(', ') : 'No Tags', inline: false },
+            { name: 'Information', value: `Aired (m/d/y): **${anime.startDate.month || '?'}/${anime.startDate.day || '?'}/${anime.startDate.year || '?'} - ${anime.endDate.month || '?'}/${anime.endDate.day || '?'}/${anime.endDate.year || '?'}**\nPopularity: **${anime.popularity || '?'}** (**${anime.favourites || '?'}**❤️)\nScore: **${(anime.averageScore || anime.meanScore) || '?'}%**\n\n**Episodes:** ${anime.nextAiringEpisode ? `${anime.nextAiringEpisode.episode - 1} (${humanize(anime.nextAiringEpisode.timeUntilAiring * 1000)})/` : ''}${anime.episodes || '?'} _(${anime.duration || '?'}m)_ ${(anime.streamingEpisodes).length > 0 ? `\n[Watch on ${anime.streamingEpisodes[0].site}](${anime.streamingEpisodes[0].url})` : ''}`, inline: false }
+        ]
+
+    });
+
+    const animeM = await message.channel.send(embed);
+    reactionDelete(animeM, message);
 }

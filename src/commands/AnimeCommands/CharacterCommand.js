@@ -15,10 +15,12 @@ module.exports = class CharacterCommand extends Command {
 	}
 	
 	async exec(message, args) {
-        if (!args.character) return message.channel.send('Correct Usage: `character [options] <character>`');
+        if (!args.character) return message.channel.send('Correct Usage: `character <character>`');
         
         const search = await searchCharacters({ search: args.character, perPage: 10 });
         if (!search[0]) return message.channel.send('Character not found.');
+
+        if (!search[1]) return characterMessage(message, search[0].id);
 
         let results = [];
 
@@ -46,28 +48,32 @@ module.exports = class CharacterCommand extends Command {
             m.delete().catch(() => {});
             const id = search[number - 1].id;
             
-            const character = await getCharacter(id);
-            if (!character) return message.channel.send('Character not found.');
-            
-            message.channel.send(`<${character.siteUrl}>`);
-            
-            const embed = new MessageEmbed({
-                author: { name: `${characterName(character)} (${character.favourites || 0}❤️)`, icon_url: 'https://google.com', url: character.siteUrl },
-                description: handleSpoilers(cleanHTML(character.description.trim()).length > 500 ? cleanHTML(character.description.trim().slice(0, 500)) + '...' : cleanHTML(character.description.trim())),
-                image: { url: character.image.large },
-                footer: { text: `${message.author.tag} | ${message.content}`, icon_url: message.author.avatarURL()},
-                timestamp: new Date(),
-        
-                fields: [
-                    { name: 'Top Anime', value: character.Anime ? `[${title(character.Anime.nodes[0].title)}](https://anilist.co/anime/${character.Anime.nodes[0].id})` : '', inline: true},
-                    { name: 'Top Manga', value: character.Manga ? `[${title(character.Manga.nodes[0].title)}](https://anilist.co/manga/${character.Manga.nodes[0].id})` : '', inline: true},
-                ]
-        
-            });
-        
-			const characterM = await message.channel.send(embed);
-            reactionDelete(characterM, message);
+            return characterMessage(message, id)
         };
 
     };
+}
+
+const characterMessage = async (message, id) => {
+    const character = await getCharacter(id);
+    if (!character) return message.channel.send('Character not found.');
+    
+    message.channel.send(`<${character.siteUrl}>`);
+    
+    const embed = new MessageEmbed({
+        author: { name: `${characterName(character)} (${character.favourites || 0}❤️)`, icon_url: 'https://google.com', url: character.siteUrl },
+        description: handleSpoilers(cleanHTML(character.description.trim()).length > 500 ? cleanHTML(character.description.trim().slice(0, 500)) + '...' : cleanHTML(character.description.trim())),
+        image: { url: character.image.large },
+        footer: { text: `${message.author.tag} | ${message.content}`, icon_url: message.author.avatarURL()},
+        timestamp: new Date(),
+
+        fields: [
+            { name: 'Top Anime', value: character.Anime ? `[${title(character.Anime.nodes[0].title)}](https://anilist.co/anime/${character.Anime.nodes[0].id})` : '', inline: true},
+            { name: 'Top Manga', value: character.Manga ? `[${title(character.Manga.nodes[0].title)}](https://anilist.co/manga/${character.Manga.nodes[0].id})` : '', inline: true},
+        ]
+
+    });
+
+    const characterM = await message.channel.send(embed);
+    reactionDelete(characterM, message);
 }
