@@ -62,15 +62,13 @@ module.exports = class AnimeCommand extends Command {
                 fields: [
                     { name: 'Genres', value: anime.genres ? anime.genres.map(genre => genre).join(', ') : 'No Genres', inline: false },
                     { name: 'Tags', value: anime.tags ? anime.tags.map(tag => tag.isMediaSpoiler ? `||${tag.name}||` : tag.name).join(', ') : 'No Tags', inline: false },
-                    { name: 'Information', value: `Aired (m/d/y): **${anime.startDate.month || '?'}/${anime.startDate.day || '?'}/${anime.startDate.year || '?'} - ${anime.endDate.month || '?'}/${anime.endDate.day || '?'}/${anime.endDate.year || '?'}**\nPopularity: **${anime.popularity || '?'}** (**${anime.favourites || '?'}**❤️)\nScore: **${(anime.averageScore || anime.meanScore) || '?'}%**\n\n**Episodes:** ${anime.nextAiringEpisode ? `${anime.nextAiringEpisode.episode - 1} (${humanize(anime.nextAiringEpisode.timeUntilAiring * 1000)})/` : ''}${anime.episodes || '?'} _(${anime.duration}m)_ ${(anime.streamingEpisodes).length > 0 ? `\n[Watch on ${anime.streamingEpisodes[0].site}](${anime.streamingEpisodes[0].url})` : ''}`, inline: false }
+                    { name: 'Information', value: `Aired (m/d/y): **${anime.startDate.month || '?'}/${anime.startDate.day || '?'}/${anime.startDate.year || '?'} - ${anime.endDate.month || '?'}/${anime.endDate.day || '?'}/${anime.endDate.year || '?'}**\nPopularity: **${anime.popularity || '?'}** (**${anime.favourites || '?'}**❤️)\nScore: **${(anime.averageScore || anime.meanScore) || '?'}%**\n\n**Episodes:** ${anime.nextAiringEpisode ? `${anime.nextAiringEpisode.episode - 1} (${humanize(anime.nextAiringEpisode.timeUntilAiring * 1000)})/` : ''}${anime.episodes || '?'} _(${anime.duration || '?'}m)_ ${(anime.streamingEpisodes).length > 0 ? `\n[Watch on ${anime.streamingEpisodes[0].site}](${anime.streamingEpisodes[0].url})` : ''}`, inline: false }
                 ]
         
             });
         
 			const animeM = await message.channel.send(embed);
 			reactionDelete(animeM, message);
-        
-            if (anime.nextAiringEpisode) { animeM.react('❗').catch(() => {});  }
         };
     };
 }
