@@ -18,7 +18,7 @@ module.exports = class AnimeCommand extends Command {
 	async exec(message, args) {
         if (!args.anime) return message.channel.send('Correct Usage: `anime <anime>`');
         
-        const search = await searchMedia({ search: args.anime, perPage: 10, sort: 'POPULARITY_DESC', type: 'ANIME' });
+        const search = await searchMedia({ search: args.anime, perPage: 10, type: 'ANIME' });
         if (!search[0]) return message.channel.send('Anime not found.');
 
         if (!search[1]) return animeMessage(message, search[0].id);

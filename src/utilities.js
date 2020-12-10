@@ -22,9 +22,9 @@ module.exports.reactionDelete = async (botMessage, playerMessage) => {
 	const filter = (reaction, user) => { return (['🗑️'].includes(reaction.emoji.name) && user.id === playerMessage.author.id )};
 	
 	if (botMessage.deletable) await botMessage.react('🗑️').catch(() => {});
-	setTimeout( () => { botMessage.reactions.cache.get('🗑️').remove().catch(() => {}) }, 20000);
+	setTimeout( () => { botMessage.reactions.cache.get('🗑️').remove().catch(() => {}) }, 50000);
 
-	const reactions = await botMessage.awaitReactions(filter, { max: 1, time: 20000 });
+	const reactions = await botMessage.awaitReactions(filter, { max: 1, time: 50000 });
 	if ((reactions.get('🗑️')) && botMessage.deletable) botMessage.delete().catch(() => {});
 };
 
