@@ -10,5 +10,6 @@ module.exports = class ReadyEvent extends Listener {
 
     exec() {
         console.log(`Logged in as ${this.client.user.tag}!`);
+        this.client.user.setActivity('a!help', { type: 'PLAYING' });
     }
 }

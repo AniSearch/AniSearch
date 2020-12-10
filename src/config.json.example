@@ -1,9 +1,0 @@
-{
-    "token": "xyz",
-    "prefix": "!",
-    "repo": { 
-        "type": "Github" ,
-        "link": "https://github.com/MrScopes/AniSearch"
-    },
-    "ownerID": ["496477678103298052"]
-}
