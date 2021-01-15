@@ -1,7 +1,7 @@
 import { Utilities } from '../../utilities';
 
 import { Command } from 'discord-akairo';
-import { Message, MessageReaction, User } from 'discord.js';
+import { Message } from 'discord.js';
 
 import { Client } from 'anilist.js';
 const AniList = new Client();
@@ -41,24 +41,5 @@ export default class AnimeCommand extends Command {
 
         const m = await message.channel.send(AnimeEmbed(search.Results[0].info, args.size).setFooter(`${message.author.tag}`, message.author.avatarURL()?.toString()))
         Utilities.reactionDelete(message, m);
-        
-        let result = 1;
-        
-        const scroll = async () => { 
-            if (search.Results[result]) await m.react('▶️');
-
-            const forward = (reaction: MessageReaction, user: User) => { return (['▶️'].includes(reaction.emoji.name) && user.id === message.author.id) };
-
-            await m.awaitReactions(forward, { max: 1, time: 500000 });
-            result++;
-
-            await m.edit(AnimeEmbed(search.Results[result].info, args.size).setFooter(`${message.author.tag}`, message.author.avatarURL()?.toString()));
-            await m.reactions.cache.get('▶️')?.remove();
-
-            await m.react('◀️');
-
-            if (search.Results[result + 1]) scroll();
-        }
-
     }
 }
