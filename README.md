@@ -1,13 +1,11 @@
 # AniSearch
 Search info on Anime and Manga via Discord.
 
-# Config
+# src/config.json
 Example:
 ```js
 { 
     "token": "xxx",
-    "prefix": "!",
-    "nsfw": "limited",
     "ownerID": "496477678103298052",
     "postgres": {
         "host": "1234",
@@ -15,7 +13,10 @@ Example:
         "database": "anisearch",
         "user": "admin",
         "password": "1234"
+    },
+    "defaultConfig": {
+        "prefix": "!",
+        "nsfw": "limited"
     }
 }
 ```
-`prefix` and `nsfw` are the default config values for each guild

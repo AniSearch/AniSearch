@@ -1,6 +1,5 @@
 import { Command } from 'discord-akairo';
 import { Message, MessageEmbed } from 'discord.js';
-import { pool } from '../../client/postgres/pool';
 import config from '../../config.json';
 
 export default class ConfigCommand extends Command {
@@ -21,14 +20,14 @@ export default class ConfigCommand extends Command {
         const key = args.key ? args.key.toLowerCase() : null;
         let value = args.value;
 
-        const client = await pool.connect();
+        const client = await this.client.pool.connect();
         const guild = await client.query('SELECT * FROM guilds WHERE id = $1', [ message.guild?.id ]);
 
         if (!value || !key || ['prefix', 'nsfw'].indexOf(key) === -1) return message.channel.send(new MessageEmbed({
             thumbnail: { url: message.guild?.iconURL()?.toString() },
             fields: [
-                { name: `Prefix (${guild.rows[0].prefix || config.prefix})`, value: 'The bot\'s command prefix.' },
-                { name: `NSFW (${guild.rows[0].nsfw || config.nsfw})`, value: 'If the bot should show NSFW media (H). Options:\n - `none`: show no nsfw media in any channel\n - `limited`: show nsfw media in nsfw channels\n - `all`: show nsfw media in all channels' }
+                { name: `Prefix (${guild.rows[0].prefix || config.defaultConfig.prefix})`, value: 'The bot\'s command prefix.' },
+                { name: `NSFW (${guild.rows[0].nsfw || config.defaultConfig.nsfw})`, value: 'If the bot should show NSFW media (H). Options:\n - `none`: show no nsfw media in any channel\n - `limited`: show nsfw media in nsfw channels\n - `all`: show nsfw media in all channels' }
             ]
         }));
 

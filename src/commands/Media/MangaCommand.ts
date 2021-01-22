@@ -1,11 +1,5 @@
-import { Utilities } from '../../utilities';
-
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-
-import { Client } from 'anilist.js';
-const AniList = new Client();
-import { MangaEmbed } from '../../client/embeds';
 
 export default class MangaCommand extends Command {
     constructor() {
@@ -24,10 +18,11 @@ export default class MangaCommand extends Command {
         if (!args.manga) return message.channel.send(`Correct Usage: \`manga ${this.description.usage}\``);
         args.manga = args.manga.replace('-small ', '').replace('-large ', '').replace('-massive ', '');
 
-        const search = await AniList.searchMedia({ search: args.manga, type: 'MANGA' });
+        const search = await this.client.AniList.searchMedia({ search: args.manga, type: 'MANGA' });
         if (!search.Results[0]) return message.channel.send(`Manga not found: \`${args.manga}\`.`);
 
-        const m = await message.channel.send(MangaEmbed(search.Results[0].info, args.size?.replace('-', '')).setFooter(`${message.author.tag}`, message.author.avatarURL()?.toString()));
-        Utilities.reactionDelete(message, m);
+        const m = await message.channel.send(this.client.embeds.MangaEmbed(search.Results[0].info, args.size?.replace('-', ''))
+            .setFooter(`${message.author.tag}`, message.author.avatarURL()?.toString()));
+        this.client.utilities.reactionDelete(message, m);
     }
 }

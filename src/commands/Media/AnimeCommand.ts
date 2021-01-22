@@ -1,11 +1,5 @@
-import { Utilities } from '../../utilities';
-
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-
-import { Client } from 'anilist.js';
-const AniList = new Client();
-import { AnimeEmbed } from '../../client/embeds';
 
 export default class AnimeCommand extends Command {
     constructor() {
@@ -36,10 +30,11 @@ export default class AnimeCommand extends Command {
         args.sort = args.sort.replace('-', '').toUpperCase();
         if (args.sort !== 'SEARCH_MATCH') args.sort = args.sort.replace('-', '').toUpperCase() + '_DESC';
 
-        const search = await AniList.searchMedia({ search: args.anime, type: 'ANIME', sort: args.sort.toUpperCase() });
+        const search = await this.client.AniList.searchMedia({ search: args.anime, type: 'ANIME', sort: args.sort.toUpperCase() });
         if (!search.Results[0]) return message.channel.send(`Anime not found: \`${args.anime}\`.`);
 
-        const m = await message.channel.send(AnimeEmbed(search.Results[0].info, args.size).setFooter(`${message.author.tag}`, message.author.avatarURL()?.toString()))
-        Utilities.reactionDelete(message, m);
+        const m = await message.channel.send(this.client.embeds.AnimeEmbed(search.Results[0].info, args.size)
+            .setFooter(`${message.author.tag}`, message.author.avatarURL()?.toString()));
+        this.client.utilities.reactionDelete(message, m);
     }
 }

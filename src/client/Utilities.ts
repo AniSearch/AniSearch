@@ -1,9 +1,14 @@
-import { MessageReaction } from 'discord.js';
-import { User } from 'discord.js';
-import { Message } from 'discord.js';
+import { User, Message, MessageReaction } from 'discord.js';
+import { Client } from './Client';
 
 export class Utilities {
-    static async reactionDelete(userMessage: Message, botMessage: Message) {
+    private client: Client;
+
+    constructor(client: Client) {
+        this.client = client;
+    }
+
+    async reactionDelete(userMessage: Message, botMessage: Message) {
         try {
             const filter = (reaction: MessageReaction, user: User) => { return (['🗑️'].includes(reaction.emoji.name) && user.id === userMessage.author.id) };
         
@@ -16,7 +21,7 @@ export class Utilities {
         } catch(e) {}
     }
     
-    static cleanHTML(html: string) {
+    cleanHTML(html: string) {
         return html.replace(/<b>/g, '').replace(/<\/b>/g, '').replace(/<br>/g, '').replace(/<i>/g, '').replace(/<\/i>/g, '');
     }
 }
