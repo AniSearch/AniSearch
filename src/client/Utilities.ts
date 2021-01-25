@@ -18,10 +18,10 @@ export class Utilities {
      */
     async reactionDelete(userMessage: Message, botMessage: Message) {
         try {
-            const filter = (reaction: MessageReaction, user: User) => { return (['🗑️'].includes(reaction.emoji.name) && user.id === userMessage.author.id) };
+            const filter = (reaction: MessageReaction, user: User) => (['🗑️'].includes(reaction.emoji.name) && user.id === userMessage.author.id);
         
             await botMessage.react('🗑️');
-            setTimeout(() => { botMessage.reactions.cache.get('🗑️')?.remove() }, 50000);
+            setTimeout(() => botMessage.reactions.cache.get('🗑️')?.remove(), 50000);
         
             await botMessage.awaitReactions(filter, { max: 1, time: 50000 });
             userMessage.delete();
