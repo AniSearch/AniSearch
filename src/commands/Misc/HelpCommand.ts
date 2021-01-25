@@ -26,8 +26,8 @@ export default class HelpCommand extends Command {
             });
 
             const categories = this.handler.categories.values();
-			for (const category of categories) embed.addField(category.id, category.map(command => `\`${command.aliases[0]}\``).join(', '));
-
+            for (const category of categories) embed.addField(category.id, category.map(command => `\`${command.aliases[0]}\``).join(', '));
+            
             const m = await message.channel.send(embed);
             this.client.utilities.reactionDelete(message, m);
         } else {

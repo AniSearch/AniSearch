@@ -12,18 +12,20 @@ export class Utilities {
      * React with 🗑️ to delete the message.
      * @param userMessage the original message
      * @param botMessage the bot's message
+     * @param time the amount of time to wait in ms, defaults to 50000 (50s)
      * @example
      * const m = await message.channel.send('Hi!');
-     * this.client.utilities.reactionDelete(message, m);
+     * this.client.utilities.reactionDelete(m, message);
+     * // this.client.utilities.reactionDelete(m, message, 30000);
      */
-    async reactionDelete(userMessage: Message, botMessage: Message) {
+    async reactionDelete(userMessage: Message, botMessage: Message, time = 50000) {
         try {
             const filter = (reaction: MessageReaction, user: User) => (['🗑️'].includes(reaction.emoji.name) && user.id === userMessage.author.id);
         
             await botMessage.react('🗑️');
-            setTimeout(() => botMessage.reactions.cache.get('🗑️')?.remove(), 50000);
+            setTimeout(() => botMessage.reactions.cache.get('🗑️')?.remove(), time);
         
-            await botMessage.awaitReactions(filter, { max: 1, time: 50000 });
+            await botMessage.awaitReactions(filter, { max: 1, time });
             userMessage.delete();
             botMessage.delete();
         } catch(e) {}
