@@ -16,6 +16,12 @@ export default class ConfigCommand extends Command {
 		});
     }
     
+    /** 
+     * Configure the current server.
+     * @example
+     * !config prefix ?
+     * !config nsfw all
+     */
     async exec(message: Message, args: any) {
         const key = args.key ? args.key.toLowerCase() : null;
         let value = args.value;

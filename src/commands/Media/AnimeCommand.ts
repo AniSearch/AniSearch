@@ -15,6 +15,13 @@ export default class AnimeCommand extends Command {
         });
     }
 
+    /** 
+     * Search an Anime.
+     * @example
+     * !a My Hero Academia
+     * !a -small My Hero Academia
+     * !a -large -popularity My Hero Academia
+     */
     async exec(message: Message, args: any) {
         if (!args.anime) return message.channel.send(`Correct Usage: \`anime ${this.description.usage}\``);
         args.anime = args.anime

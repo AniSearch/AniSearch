@@ -12,7 +12,14 @@ export default class EvalCommand extends Command {
             args: [{ id: 'input', match: 'rest' }]
         });
 	}
-	
+    
+    /**
+     * Eval command made for bot owner.
+     * @example
+     * !eval 1 + 1
+     * !eval this.client.user.tag
+     * !eval message.content
+     */
 	async exec(message: Message, args: any) {
         if (!args.input) return message.channel.send(`Correct Usage: \`eval ${this.description.usage}\``);
         let result = null;

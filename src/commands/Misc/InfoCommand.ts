@@ -10,9 +10,10 @@ export default class InfoCommand extends Command {
 	   		description: { content: 'Bot information.' },
 		});
     }
-    
+	
+	/** Some basic bot info. */
     async exec(message: Message) {
-		message.channel.send(new MessageEmbed({
+		  message.channel.send(new MessageEmbed({
             color: '#0099ff',
             footer: { text: `${message.author.tag} | info`, icon_url: message.author.avatarURL()?.toString()},
             timestamp: new Date(),

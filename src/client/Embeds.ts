@@ -18,7 +18,7 @@ export class Embeds {
             timestamp: new Date(),
         });
     }
-
+ 
     AnimeEmbed = (json: Media, size: 'small' | 'large' | 'massive') => { 
         const embed = new MessageEmbed(this.MediaBase(json));
     

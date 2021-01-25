@@ -11,6 +11,12 @@ export default class HelpCommand extends Command {
 		});
     }
     
+    /** 
+     * Get help for all or a certain command.
+     * @example
+     * !help
+     * !help anime
+    */
     async exec(message: Message, args: any) {
         if (!args.command) {
             const embed = new MessageEmbed({

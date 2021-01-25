@@ -8,6 +8,7 @@ export default class ReadyEvent extends Listener {
 		});
 	}
 
+	/** Called when the bot is ready. */
 	exec() {
 		console.log(`Logged in as ${this.client.user?.tag}!`);
 		this.client.user?.setActivity('Anime', { type: 'WATCHING' });

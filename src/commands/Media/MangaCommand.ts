@@ -14,6 +14,13 @@ export default class MangaCommand extends Command {
         });
     }
 
+    /** 
+     * Search a Manga.
+     * @example
+     * !m My Hero Academia
+     * !m -small My Hero Academia
+     * !m -large -popularity My Hero Academia
+     */
     async exec(message: Message, args: any) {
         if (!args.manga) return message.channel.send(`Correct Usage: \`manga ${this.description.usage}\``);
         args.manga = args.manga.replace('-small ', '').replace('-large ', '').replace('-massive ', '');
