@@ -1,5 +1,6 @@
 # AniSearch
-Search info on Anime and Manga via Discord.
+Search info on Anime and Manga via Discord.\
+**CURRENLTY INCOMPLETE!**
 
 # src/config.json
 Example:
