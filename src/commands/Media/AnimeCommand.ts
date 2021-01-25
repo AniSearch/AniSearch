@@ -34,7 +34,7 @@ export default class AnimeCommand extends Command {
         if (!search.Results[0]) return message.channel.send(`Anime not found: \`${args.anime}\`.`);
 
         const m = await message.channel.send(this.client.embeds.AnimeEmbed(search.Results[0].info, args.size)
-            .setFooter(`${message.author.tag}`, message.author.avatarURL()?.toString()));
+            .setFooter(`${message.author.tag} | anime`, message.author.avatarURL()?.toString()));
         this.client.utilities.reactionDelete(message, m);
     }
 }

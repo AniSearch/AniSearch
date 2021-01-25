@@ -15,7 +15,7 @@ export default class HelpCommand extends Command {
         if (!args.command) {
             const embed = new MessageEmbed({
                 color: '#0099ff',
-                footer: { text: `${message.author.tag} | ${message.content}`, icon_url: message.author.avatarURL()?.toString()},
+                footer: { text: `${message.author.tag} | ${this.aliases[0]}`, icon_url: message.author.avatarURL()?.toString()},
                 timestamp: new Date(),
             });
 
@@ -23,13 +23,13 @@ export default class HelpCommand extends Command {
 			for (const category of categories) embed.addField(category.id, category.map(command => `\`${command.aliases[0]}\``).join(', '));
 
             const m = await message.channel.send(embed);
-
+            this.client.utilities.reactionDelete(message, m);
         } else {
             const embed = new MessageEmbed({
                 color: '#0099ff',
                 title: `\`${args.command.aliases[0]}\``,
                 description: args.command.description.content,
-                footer: { text: `${message.author.tag} | ${message.content}`, icon_url: message.author.avatarURL()?.toString()},
+                footer: { text: `${message.author.tag} | help`, icon_url: message.author.avatarURL()?.toString()},
                 timestamp: new Date(),
             });
 

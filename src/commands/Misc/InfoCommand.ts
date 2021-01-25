@@ -14,7 +14,7 @@ export default class InfoCommand extends Command {
     async exec(message: Message) {
 		message.channel.send(new MessageEmbed({
             color: '#0099ff',
-            footer: { text: `${message.author.tag} | ${message.content}`, icon_url: message.author.avatarURL()?.toString()},
+            footer: { text: `${message.author.tag} | info`, icon_url: message.author.avatarURL()?.toString()},
             timestamp: new Date(),
 
             fields: [

@@ -22,7 +22,7 @@ export default class MangaCommand extends Command {
         if (!search.Results[0]) return message.channel.send(`Manga not found: \`${args.manga}\`.`);
 
         const m = await message.channel.send(this.client.embeds.MangaEmbed(search.Results[0].info, args.size?.replace('-', ''))
-            .setFooter(`${message.author.tag}`, message.author.avatarURL()?.toString()));
+            .setFooter(`${message.author.tag} | manga`, message.author.avatarURL()?.toString()));
         this.client.utilities.reactionDelete(message, m);
     }
 }
