@@ -9,7 +9,7 @@ export default class ProfileCommand extends Command {
 			category: 'Misc',
 			aliases: ['profile', 'anilist', 'mal'],
             description: { content: 'View a user\'s AniList and MAL accounts.' },
-            args: [{ id: 'user', type: 'member' }]
+            args: [{ id: 'user', type: 'string' }]
 		});
     }
 	
@@ -21,7 +21,7 @@ export default class ProfileCommand extends Command {
      * !profile 496477678103298052
     */
     async exec(message: Message, args: any) {
-        const target: GuildMember = args.user || message.member;
+        const target = await this.client.utilities.resolveMember(message, args.user) || message.member;
         
         const json = await this.client.pool.query('SELECT * FROM users WHERE id = $1', [ target.id ]);
         if (!json.rows[0]) return message.react('❌');
