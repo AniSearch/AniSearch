@@ -18,15 +18,7 @@ export class Client extends AkairoClient {
             prefix: async (message) => { 
                 if (!message.guild) return config.defaultConfig.prefix;
 
-                const client = await this.pool.connect();
-
-                const guild = await client.query('SELECT * FROM guilds WHERE id = $1', [ message.guild?.id ]);
-                if (!guild.rows[0]) {
-                    await client.query('INSERT INTO guilds (id, prefix) VALUES ($1, $2)', [ message.guild?.id, config.defaultConfig.prefix ])
-                    return config.defaultConfig.prefix;
-                }
-
-                client.release();
+                const guild = await this.pool.query('SELECT * FROM guilds WHERE id = $1', [ message.guild?.id ]);
 
                 return guild.rows[0].prefix || config.defaultConfig.prefix;
             },

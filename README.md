@@ -21,3 +21,7 @@ Example:
     }
 }
 ```
+
+# database tables
+- guilds (id text, prefix text, nsfw text)
+- users (id text, anilist text, mal text)
