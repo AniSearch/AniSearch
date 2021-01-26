@@ -44,7 +44,7 @@ export default class HelpCommand extends Command {
 		    if (args.command.aliases.length > 1) embed.addField('Aliases', `${args.command.aliases.map((c: any) => `\`${c}\``).join(', ')}`, true);
             
             const m = await message.channel.send(embed);
-
+            this.client.utilities.reactionDelete(message, m);
         }
     }
 }

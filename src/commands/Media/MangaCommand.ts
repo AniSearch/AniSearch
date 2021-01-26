@@ -6,30 +6,25 @@ export default class MangaCommand extends Command {
         super('manga', {
             category: 'Media',
             aliases: ['manga', 'm'],
-            description: { content: 'Search manga info.', usage: '[-small | -large] <title>' },
+            description: { content: 'Search Manga info.', usage: '<title>' },
             args: [
-                { id: 'size', type: ['-small', '-large'], default: '-small' },
                 { id: 'manga', match: 'text' }
             ]
         });
     }
 
     /** 
-     * Search a Manga.
+     * Search Manga.
      * @example
      * !m My Hero Academia
-     * !m -small My Hero Academia
-     * !m -large -popularity My Hero Academia
      */
     async exec(message: Message, args: any) {
         if (!args.manga) return message.channel.send(`Correct Usage: \`manga ${this.description.usage}\``);
-        args.manga = args.manga.replace('-small ', '').replace('-large ', '').replace('-massive ', '');
 
         const search = await this.client.AniList.searchMedia({ search: args.manga, type: 'MANGA' });
         if (!search.Results[0]) return message.channel.send(`Manga not found: \`${args.manga}\`.`);
 
-        const m = await message.channel.send(this.client.embeds.MangaEmbed(search.Results[0].info, args.size?.replace('-', ''))
-            .setFooter(`${message.author.tag} | manga`, message.author.avatarURL()?.toString()));
+        const m = await message.channel.send(this.client.embeds.MangaEmbed(search.Results[0].info, message.member));
         this.client.utilities.reactionDelete(message, m);
     }
 }

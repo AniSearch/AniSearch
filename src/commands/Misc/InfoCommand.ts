@@ -13,7 +13,7 @@ export default class InfoCommand extends Command {
 	
 	/** Some basic bot info. */
     async exec(message: Message) {
-		  message.channel.send(new MessageEmbed({
+		const m = await message.channel.send(new MessageEmbed({
             color: '#0099ff',
             footer: { text: `${message.author.tag} | info`, icon_url: message.author.avatarURL()?.toString()},
             timestamp: new Date(),
@@ -21,8 +21,9 @@ export default class InfoCommand extends Command {
             fields: [
                 { name: 'Stats', value: `Servers: ${this.client.guilds.cache.size}\nUsers: ${this.client.guilds.cache.reduce((a, b) => a + b.memberCount, 0)}\nUptime: ${humanize(Number(this.client.uptime))}` },
                 { name: 'Links', value: '[GitHub Repository](https://github.com/MrScopes/AniSearch/)\n[anilist.js](https://npmjs.com/package/anilist.js/) (API wrapper for AniList)' }
-            ]
-            
+            ] 
         }));
+        
+        this.client.utilities.reactionDelete(message, m);
     }
 }

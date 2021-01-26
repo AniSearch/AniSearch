@@ -23,9 +23,11 @@ export class Utilities {
             const filter = (reaction: MessageReaction, user: User) => (['🗑️'].includes(reaction.emoji.name) && user.id === userMessage.author.id);
         
             await botMessage.react('🗑️');
-            setTimeout(() => botMessage.reactions.cache.get('🗑️')?.remove(), time);
+            setTimeout(() => { botMessage.reactions.cache.get('🗑️')?.remove() }, time);
         
-            await botMessage.awaitReactions(filter, { max: 1, time });
+            const reactions = await botMessage.awaitReactions(filter, { max: 1, time });
+            if (!reactions.get('🗑️') && botMessage.deletable) return;
+            
             userMessage.delete();
             botMessage.delete();
         } catch(e) {}

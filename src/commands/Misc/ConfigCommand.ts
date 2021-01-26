@@ -40,14 +40,14 @@ export default class ConfigCommand extends Command {
         if (key === 'prefix') {
             if (value.length >= 8) return message.channel.send('Prefix must be shorter than 8 characters.');
 
-            await message.react('✅');
+            message.react('✅');
             await client.query('UPDATE guilds SET prefix = $1 WHERE id = $2', [value, message.guild?.id]);
         }
 
         if (key === 'nsfw') {
             if (['none', 'limited', 'all'].indexOf(value.toLowerCase()) === -1) return message.channel.send('Invalid Config option.');
 
-            await message.react('✅');
+            message.react('✅');
             await client.query('UPDATE guilds SET nsfw = $1 WHERE id = $2', [value.toLowerCase(), message.guild?.id]);
         }
     }
