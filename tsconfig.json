@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "es2016",
+		"module": "CommonJS",
 		"resolveJsonModule": true,
 		"strict": true,
 		"esModuleInterop": true,
